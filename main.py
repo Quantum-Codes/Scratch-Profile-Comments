@@ -13,7 +13,10 @@ soup = BeautifulSoup(page.content, "html.parser")
 result = soup.find_all("li", class_="top-level-reply")
 #print(result[6])
 #exit()
+
 replies = result[7].find("ul", class_="replies")
+if replies.text == "":
+    print("No content!")
 user = replies.find_all("div", class_="info")
 #print(user)
 all_replies = []
@@ -38,6 +41,7 @@ for i in range(0, len(user)):
 print()
 print(all_replies)
 
+
 '''
 search = re.search("title=", str(result[0]))
 print(search)
@@ -53,8 +57,8 @@ while data[i] != '"':
 
 print(id)
 '''
+exit()
 '''
-
 for i in range(0, len(result)):
 	user = result[i].find("div", class_="comment")
 	user = user.find("div", class_="info")
@@ -101,7 +105,7 @@ for i in range(0, len(result)):
 	    "Time": comment_time,
 	    "ID": id,
 	    "IsParent": True,
-	    "ParentID": id
+	    "CommentID": id
 	}
 
 	comment = json.dumps(comment)
