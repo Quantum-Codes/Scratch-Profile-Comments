@@ -36,24 +36,10 @@ def get_replies(count):
 		  id += data[i]
 		  i += 1
 	  id = int(id)
-	  
-	  """
-    search = re.search("title=", str(result[i]))
-    #print(search)
-    index = search.span()[1]
-    #print(index)
-    data = str(result[i])[index + 1:]
-    #print(data)
-    i = 0
-    comment_time = ""
-    while data[i] != '"':
-       comment_time += data[i]
-       i += 1 
-    """
-    reply = {"id":id, "username" : username, "comment" : 	content.replace("                   ","")}
-    all_replies.append(reply)
-	return all_replies
-#print(get_replies(0)) 
+	  reply = {"id":id, "username" : username, "comment" : 	content.replace("                   ","")}
+	  all_replies.append(reply)
+  return all_replies
+#print(get_replies())  
 
 '''
 search = re.search("title=", str(result[0]))
