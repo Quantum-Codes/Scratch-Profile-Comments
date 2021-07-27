@@ -7,7 +7,7 @@ import os
 os.system('clear')
 URL = "https://scratch.mit.edu/site-api/comments/user/Ankit_Anmol/?page=1"
 page = requests.get(URL)
-
+API = []
 soup = BeautifulSoup(page.content, "html.parser")
 #print(soup)
 result = soup.find_all("li", class_="top-level-reply")
@@ -109,4 +109,7 @@ for i in range(0, len(result)):
   }
   comment = json.dumps(comment)
   comment = json.loads(comment)
-  print(comment)
+  #print(comment)
+  API.append(comment)
+
+print(API)
