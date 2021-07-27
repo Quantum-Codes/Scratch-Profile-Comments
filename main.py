@@ -2,16 +2,42 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import re
+import os
 
+os.system('clear')
 URL = "https://scratch.mit.edu/site-api/comments/user/Ankit_Anmol/?page=1"
 page = requests.get(URL)
 
 soup = BeautifulSoup(page.content, "html.parser")
 #print(soup)
 result = soup.find_all("li", class_="top-level-reply")
-#print(result[0])
-replies = result[6].find("ul", class_="replies") 
-print(replies)
+#print(result[6])
+#exit()
+replies = result[7].find("ul", class_="replies")
+user = replies.find_all("div", class_="info")
+#print(user)
+all_replies = []
+for i in range(0, len(user)):
+	username = user[i].find("div", class_="name")
+	username = username.find("a").text
+	content = user[i].find("div", class_="content").text
+	username = username.strip().replace("\n","")
+	content = content.strip().replace("\n","")
+	search = re.search("data-comment-id=", str(result[i]))
+	index = search.span()[1]
+	data = str(result[i])[index + 1:]
+	i = 0
+	id = ""
+	while data[i] != '"':
+		id += data[i]
+		i += 1
+	id = int(id)
+	reply = {"id":id, "username" : username, "comment" : 	content.replace("                   ","")}
+	all_replies.append(reply)
+	print(reply)
+print()
+print(all_replies)
+
 '''
 search = re.search("title=", str(result[0]))
 print(search)
@@ -27,7 +53,6 @@ while data[i] != '"':
 
 print(id)
 '''
-
 '''
 
 for i in range(0, len(result)):
