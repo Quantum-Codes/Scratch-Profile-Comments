@@ -21,12 +21,13 @@ def welcome():
 def return_data():
     username = request.args.get('username')
     limit = int(request.args.get('limit', default=0, type=int))
+    page = int(request.args.get('page', default=1, type=int))
     d = []
     if limit == 0:
-      return get_comments(username=username)[limit]
+      return get_comments(username, page)[limit]
     if limit > 0:
       try:
-        comments = get_comments(username=username)
+        comments = get_comments(username, page)
         for i in range(0, limit):
             d.append(comments[i])
         return jsonify(d), 200
