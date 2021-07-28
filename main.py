@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask, jsonify
 import json
 from flask import request
 from api import *
+import test
 
 app = Flask(__name__)
 
@@ -20,15 +21,15 @@ def welcome():
 def return_data():
     username = request.args.get('username')
     limit = int(request.args.get('limit', default=0, type=int))
-    d = ""
+    d = []
     if limit == 0:
       return get_comments(username=username)[limit]
     if limit > 0:
       try:
         comments = get_comments(username=username)
         for i in range(0, limit):
-            d += str(comments[i])
-        return d, 200
+            d.append(comments[i])
+        return jsonify(d), 200
       except IndexError:
         message = {
           "Error": "Limit too high!"

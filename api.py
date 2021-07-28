@@ -4,8 +4,8 @@ import json
 import re
 
 
-def get_comments(username, page=1):
-    URL = f"https://scratch.mit.edu/site-api/comments/user/{username}/?page={page}"
+def get_comments(username, site_page=1):
+    URL = f"https://scratch.mit.edu/site-api/comments/user/{username}/?page={site_page}"
     page = requests.get(URL)
     API = []
     soup = BeautifulSoup(page.content, "html.parser")
@@ -97,4 +97,4 @@ def get_comments(username, page=1):
     return API
 
 
-print(get_comments("Ankit_Anmol", page=2))
+print(get_comments("Ankit_Anmol", site_page=2))
