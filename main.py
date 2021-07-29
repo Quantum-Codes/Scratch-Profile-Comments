@@ -19,16 +19,20 @@ def welcome():
 
 @app.route('/comments/', methods=['GET'])
 def return_data():
-    username = request.args.get('username')
-    limit = int(request.args.get('limit', default=0, type=int))
+    username = request.args.get('username',default="%hello@")
+    limit = request.args.get('limit', default="all", type=str)
     page = int(request.args.get('page', default=1, type=int))
     d = []
-    if limit == 0:
+    if username == "%hello@":
+      return {"error":"username arguement is mandatory"}, 404
+    if limit == "0":
+      limit = int(limit)
       try:
          return get_comments(username, page)[limit]
       except KeyError:
          return {"error":"page doesn't exist"}, 404
-    if limit > 0:
+    elif limit.isnumeric():
+      limit = int(limit)
       try:
         done = 0
         p=page
@@ -48,6 +52,8 @@ def return_data():
           "Error": "Limit too high!"
         }
        return f"{json.dumps(message)}", 404
+    else:
+      return jsonify(get_comments(username, page)), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=105, debug=True)
