@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, redirect
 import json
 from flask import request
 from api import *
@@ -14,7 +14,8 @@ def welcome():
         "Developers": "Ankit Anmol and Siddhesh Chavan",
         "Documentation": "A link : https://scratch-profile-comments.sid72020123.repl.co/comments/?username=Ankit_Anmol&limit=10&page=1"
     }
-    return f"{json.dumps(message)}", 200
+    #return f"{json.dumps(message)}", 200
+    return redirect("https://github.com/Quantum-Codes/Profile-comments-API/wiki"), 302
 
 
 @app.route('/comments/', methods=['GET'])
