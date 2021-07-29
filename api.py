@@ -10,6 +10,8 @@ def get_comments(username, site_page=1):
     API = []
     soup = BeautifulSoup(page.content, "html.parser")
     result = soup.find_all("li", class_="top-level-reply")
+    if len(result) == 0:
+      return {"error":"page doesn't exist"}
 
     def get_replies(count):
         replies = result[count].find("ul", class_="replies")

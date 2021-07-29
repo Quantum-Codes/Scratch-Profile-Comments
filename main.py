@@ -12,30 +12,42 @@ def welcome():
     message = {
         "Message": "Welcome To Scratch User Comments API",
         "Developers": "Ankit Anmol and Siddhesh Chavan",
-        "Documentation": "A link : https://scratch-profile-comments.sid72020123.repl.co/user/?username=Ankit_Anmol&limit=100"
+        "Documentation": "A link : https://scratch-profile-comments.sid72020123.repl.co/comments/?username=Ankit_Anmol&limit=10&page=1"
     }
     return f"{json.dumps(message)}", 200
 
 
-@app.route('/user/', methods=['GET'])
+@app.route('/comments/', methods=['GET'])
 def return_data():
     username = request.args.get('username')
     limit = int(request.args.get('limit', default=0, type=int))
     page = int(request.args.get('page', default=1, type=int))
     d = []
     if limit == 0:
-      return get_comments(username, page)[limit]
+      try:
+         return get_comments(username, page)[limit]
+      except KeyError:
+         return {"error":"page doesn't exist"}, 404
     if limit > 0:
       try:
-        comments = get_comments(username, page)
-        for i in range(0, limit):
-            d.append(comments[i])
+        done = 0
+        p=page
+        while done != limit:
+          comments = get_comments(username, p)
+          for i in range(0, len(comments)):
+            try:
+              d.append(comments[i])
+            except KeyError:
+              return {"error":"page doesn't exist"}, 404
+            done += 1
+            if done == limit: break
+          p+=1
         return jsonify(d), 200
       except IndexError:
-        message = {
+       message = {
           "Error": "Limit too high!"
         }
-        return f"{json.dumps(message)}", 404
+       return f"{json.dumps(message)}", 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=105, debug=True)
