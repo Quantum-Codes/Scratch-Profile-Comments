@@ -39,8 +39,7 @@ def return_data():
 				p += 1
 			return jsonify(d), 200
 		except IndexError:
-			message = {"Error": "Limit too high!"}
-			return f"{json.dumps(message)}", 404
+			return {"Error": "Limit too high!"}, 404
 	else:
 		return jsonify(get_comments(username, page)), 200
 
