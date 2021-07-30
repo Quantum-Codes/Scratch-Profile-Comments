@@ -97,6 +97,3 @@ def get_comments(username, site_page=1):
         comment = json.loads(comment)
         API.append(comment)
     return API
-
-
-print(get_comments("Ankit_Anmol", site_page=2))
