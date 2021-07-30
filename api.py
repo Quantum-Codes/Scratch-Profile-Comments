@@ -93,7 +93,5 @@ def get_comments(username, site_page=1):
             "Replies": replies,
             "CommentID": id
         }
-        comment = json.dumps(comment)
-        comment = json.loads(comment)
         API.append(comment)
     return API
