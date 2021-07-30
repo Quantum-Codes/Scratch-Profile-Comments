@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, redirect, request
-import json
 from api import *
 
 app = Flask(__name__)
