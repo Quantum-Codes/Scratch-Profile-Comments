@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def welcome():
-	return redirect("https://github.com/Quantum-Codes/Profile-comments-API/wiki"), 302
+	return redirect("https://github.com/Quantum-Codes/Scratch-Profile-Comments/wiki"), 302
 
 @app.route('/comments/', methods=['GET'])
 def return_data():
