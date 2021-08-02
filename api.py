@@ -45,7 +45,7 @@ def get_comments(username, site_page=1):
                     i += 1
 
                 reply = {"id": id, "username": username, "comment": content.replace("                   ", ""),
-                         "timestamp": comment_time}
+                         "timestamp": comment_time, "IsParent":False}
                 all_replies.append(reply)
             return all_replies
 
@@ -88,7 +88,8 @@ def get_comments(username, site_page=1):
             "Username": user,
             "Content": content,
             "Time": comment_time,
-            "IsParent": parent,
+            "HasReplies": parent,
+            "IsParent": True,
             "Replies": replies,
             "CommentID": id
         }
