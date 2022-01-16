@@ -4,10 +4,33 @@ import re
 
 
 def get_comments(username, site_page=1):
+    # Retrieve comments from API. "f" is used before the beginning of the string to make Python substitute the values. If you provide a value of 1 (or no value) for the second argument, it's equivalent to opening someone's Scratch profile with SA disabled; the first page of comments loads. If you pass a value of 2, it's the equivalent to loading the page, using a browser extension to return an empty response for the first page of comments, and then loading the second page of comments. Since this doesn't need authentication, you don't provide your password.
     URL = f"https://scratch.mit.edu/site-api/comments/user/{username}/?page={site_page}"
+    # Send an HTTP request to retrieve a page of comments, as explained above.
     page = requests.get(URL)
+    # Initialize an empty array with name "API"
     API = []
+    # Start the HTML parser on the data.
     soup = BeautifulSoup(page.content, "html.parser")
+    # Retrieve each comment thread. An individual thread looks like this:
+    '''
+    <li class="top-level-reply">
+        <div id="comments-1" class="comment " data-comment-id="1">
+            <div class="actions-wrap">
+            </div>
+            <a href="/users/username" id="comment-user" data-comment-user="username"><img class="avatar" src="//cdn2.scratch.mit.edu/get_image/user/1_60x60.png" width="45" height="45"/></a>
+            <div class="info">
+                <div class="name">
+                <a href="/users/username">username</a>
+            </div>
+            <div class="content">
+                Some characters are HTML entity encoded like this &amp; this. This is an apostrophe. &#39;
+            </div>
+            <div>
+                <span class="time" title="2000-01-01T01:01:01Z">January 1, 2022</span>
+                <a class="reply" style="display: none;" data-comment-
+                
+    '''
     result = soup.find_all("li", class_="top-level-reply")
     if len(result) == 0:
       return {"error":"page doesn't exist"}
