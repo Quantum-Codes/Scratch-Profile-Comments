@@ -4,6 +4,9 @@ import re
 
 
 def get_comments(username, site_page=1):
+    '''
+    Retrieve comments. The first parameter defines the username. The second parameter (optional) defines what page of comments to retrieve.
+    '''
     # Retrieve comments from API. "f" is used before the beginning of the string to make Python substitute the values. If you provide a value of 1 (or no value) for the second argument, it's equivalent to opening someone's Scratch profile with SA disabled; the first page of comments loads. If you pass a value of 2, it's the equivalent to loading the page, using a browser extension to return an empty response for the first page of comments, and then loading the second page of comments. Since this doesn't need authentication, you don't provide your password.
     URL = f"https://scratch.mit.edu/site-api/comments/user/{username}/?page={site_page}"
     # Send an HTTP request to retrieve a page of comments, as explained above.
@@ -93,6 +96,7 @@ def get_comments(username, site_page=1):
                 reply = {"id": id, "username": username, "comment": content.replace("                   ", ""),
                          "timestamp": comment_time}
                 all_replies.append(reply)
+            # Respond with array containing comments
             return all_replies
 
     for i in range(0, len(result)):
@@ -139,4 +143,5 @@ def get_comments(username, site_page=1):
             "CommentID": id
         }
         API.append(comment)
+    # Return a list of comments
     return API
