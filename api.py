@@ -13,43 +13,65 @@ def get_comments(username, site_page=1):
     # Start the HTML parser on the data.
     soup = BeautifulSoup(page.content, "html.parser")
     # Retrieve each comment thread. An individual thread looks like this:
-    '''
-    <li class="top-level-reply">
-        <div id="comments-1" class="comment " data-comment-id="1">
-            <div class="actions-wrap">
-            </div>
-            <a href="/users/username" id="comment-user" data-comment-user="username"><img class="avatar" src="//cdn2.scratch.mit.edu/get_image/user/1_60x60.png" width="45" height="45"/></a>
-            <div class="info">
-                <div class="name">
-                <a href="/users/username">username</a>
-            </div>
-            <div class="content">
-                Some characters are HTML entity encoded like this &amp; this. This is an apostrophe. &#39;
-            </div>
-            <div>
-                <span class="time" title="2000-01-01T01:01:01Z">January 1, 2022</span>
-                <a class="reply" style="display: none;" data-comment-
-                
-    '''
+    # 
+    # <li class="top-level-reply">
+    #     <div id="comments-1" class="comment " data-comment-id="1">
+    #         <div class="actions-wrap">
+    #         </div>
+    #         <a href="/users/username" id="comment-user" data-comment-user="username"><img class="avatar" src="//cdn2.scratch.mit.edu/get_image/user/1_60x60.png" width="45" height="45"/></a>
+    #         <div class="info">
+    #             <div class="name">
+    #             <a href="/users/username">username</a>
+    #         </div>
+    #         <div class="content">
+    #             Some characters are HTML entity encoded like this &amp; this. This is an apostrophe. &#39;
+    #         </div>
+    #         <div>
+    #             <span class="time" title="2000-01-01T01:01:01Z">January 1, 2022</span>
+    #             <a class="reply" style="display: none;" data-comment-id="1" data-parent-thread="1" data-commentee-id="1" data-control="modal-login">
+    #                 <span>Reply</span>
+    #             </a>
+    #         </div>
+    #         <div data-content="reply-form"></div>
+    #     </div>
+    # </div>
+    # There's more after this, but it's not in here. However, you get the point.
     result = soup.find_all("li", class_="top-level-reply")
+    # Finds everything with a "top-level-reply" class. In other words, every thread.
     if len(result) == 0:
       return {"error":"page doesn't exist"}
+    # Detects 404 pages
 
     def get_replies(count):
+        '''
+        Retrieve replies to comment thread.
+        '''
+        # Extract reply list
         replies = result[count].find("ul", class_="replies")
         if replies.text == "":
+            # Detect empty reply chain
             return None
         else:
+            # Get DOM node containing user data for comment
             user = replies.find_all("div", class_="info")
             # print(user)
+            # Initialize array with name "all_replies"
             all_replies = []
+            # Iterate through reply list and extract username
             for i in range(0, len(user)):
+                # Get username section. Probably does it like this to save memory.
                 username = user[i].find("div", class_="name")
+                # Redefine username as the actual username element
                 username = username.find("a").text
+                # Get post content
                 content = user[i].find("div", class_="content").text
+                # Trim username newlines
                 username = username.strip().replace("\n", "")
+                # Trim post content newlines
                 content = content.strip().replace("\n", "")
+                # Get comment IDs
                 search = re.search("data-comment-id=", str(result[i]))
+                # Get post position in reply list
                 index = search.span()[1]
                 data = str(result[i])[index + 1:]
                 i = 0
@@ -58,6 +80,7 @@ def get_comments(username, site_page=1):
                     id += data[i]
                     i += 1
                 id = int(id)
+                # Get post numbers (I think)
                 search = re.search("title=", str(result[i]))
                 index = search.span()[1]
                 data = str(result[i])[index + 1:]
@@ -66,7 +89,7 @@ def get_comments(username, site_page=1):
                 while data[i] != '"':
                     comment_time += data[i]
                     i += 1
-
+                    # Create final comment body
                 reply = {"id": id, "username": username, "comment": content.replace("                   ", ""),
                          "timestamp": comment_time}
                 all_replies.append(reply)
